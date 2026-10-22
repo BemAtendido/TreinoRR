@@ -1,3 +1,4 @@
+import './coach-test-clock.mjs';
 /* What bounds the Coach's spend, pinned against the real queue and the fixture provider.
  *
  * Forget keeps today's per-profile count. The instance count is reserved at enqueue and is
@@ -18,7 +19,7 @@ const { forcePrivilegeVerdict } = await import('../coach/adapters/spawn.js');
 cfg.save({ enabled: true, provider: 'fixture' });
 forcePrivilegeVerdict({ ok: true, dropped: false, why: 'pinned by the test suite' });
 
-const today = new Date().toISOString().slice(0, 10);
+const today = new Date(Date.now()).toISOString().slice(0, 10);
 const userFile = uid => `${DIR}/coach/${uid}.json`;
 
 async function settle(uid, ms = 15000) {
