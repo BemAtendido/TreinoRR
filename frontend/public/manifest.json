@@ -1,7 +1,8 @@
+
 {
-  "name": "openGym",
-  "short_name": "openGym",
-  "description": "Personal gym & body weight tracker",
+  "name": "Treino Romário Rocha",
+  "short_name": "TreinoRR",
+  "description": "Seus treinos. Seus pesos. Seu perfil.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,7 +10,17 @@
   "background_color": "#0c0e12",
   "theme_color": "#0c0e12",
   "icons": [
-    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "favicon-gym.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon-gym-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
