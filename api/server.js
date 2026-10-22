@@ -2591,8 +2591,8 @@ coachJobs.setProposalHook((uid, pending) => {
   const n = (pending?.changes || []).length;
   if (!n) return;
   sendPush(uid, {
-    title: 'Your Coach has been reading',
-    body: n === 1 ? '1 suggestion after this week' : `${n} suggestions after this week`,
+    title: 'TreinoRR',
+    body: n === 1 ? 'Seu treinador preparou 1 sugestão para você nesta semana.' : `Seu treinador preparou ${n} sugestões para você nesta semana.`,
     tag: 'coach-proposal', url: '#/coach'
   });
 });
