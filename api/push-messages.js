@@ -1,73 +1,35 @@
-
 import { NUDGE_COPY } from './nudge-copy.js';
 import { lineIndex } from './nudge.js';
 
+// Todas as notificações push usam português brasileiro, independentemente
+// do idioma selecionado no perfil.
 const COPY = {
-  en: {
-    restTitle: 'Rest over 💪',
-    restBody: 'Time for your next set.',
-    testBody: 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.',
-    dayFallbackTitle: 'Workout planned today',
-    dayRoutineSuffix: 'today',
-    dayBody: "It's on your plan. Let's go 💪",
-  },
-  'pt-BR': {
-    restTitle: 'Descanso finalizado 💪',
-    restBody: 'Hora de começar sua próxima série.',
-    testBody: 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.',
-    dayFallbackTitle: 'Hora de treinar! 💪',
-    dayRoutineSuffix: 'hoje',
-    dayBody: 'Seu treino está esperando por você. Bora treinar!',
-  },
+  restTitle: 'Descanso finalizado 💪',
+  restBody: 'Hora de começar sua próxima série.',
+  testBody: 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.',
+  dayFallbackTitle: 'Hora de treinar! 💪',
+  dayRoutineSuffix: 'hoje',
+  dayBody: 'Seu treino está esperando por você. Bora treinar!',
 };
 
-const copyFor = lang => COPY[lang] || COPY['pt-BR'];
-
 export function restTimerPush(lang) {
-  const copy = copyFor(lang);
-  return { title: copy.restTitle, body: copy.restBody, tag: 'rest-timer' };
+  return { title: 'TreinoRR', body: `${COPY.restTitle} ${COPY.restBody}`, tag: 'rest-timer' };
 }
 
 export function testPush(lang) {
-  return {
-    title: 'TreinoRR',
-    body: 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.',
-    tag: 'test'
-  };
+  return { title: 'TreinoRR', body: COPY.testBody, tag: 'test' };
 }
 
 export function dayReminderPush(lang, routine) {
-  const copy = copyFor(lang);
-  return {
-    title: routine
-      ? `${routine.emoji || '🏋️'} ${routine.name} ${copy.dayRoutineSuffix}`
-      : copy.dayFallbackTitle,
-    body: copy.dayBody,
-    tag: 'day-reminder',
-  };
+  const heading = routine
+    ? `${routine.emoji || '🏋️'} ${routine.name} ${COPY.dayRoutineSuffix}`
+    : COPY.dayFallbackTitle;
+  return { title: 'TreinoRR', body: `${heading} — ${COPY.dayBody}`, tag: 'day-reminder' };
 }
 
-const nudgeCopyFor = lang => {
-  if (lang === 'de-CH') {
-    const ch = s => s.replace(/ß/g, 'ss');
-    return Object.fromEntries(
-      Object.entries(NUDGE_COPY.de).map(([k, c]) => [
-        k,
-        { title: ch(c.title), lines: c.lines.map(ch) }
-      ])
-    );
-  }
-  return NUDGE_COPY[lang] || NUDGE_COPY['pt-BR'] || NUDGE_COPY.en;
-};
-
 export function nudgePush(lang, tone, routine, iso) {
-  const copy = nudgeCopyFor(lang)[NUDGE_COPY.en[tone] ? tone : 'friendly'];
+  const copy = NUDGE_COPY['pt-BR'][NUDGE_COPY['pt-BR'][tone] ? tone : 'friendly'];
   const line = copy.lines[lineIndex(iso, copy.lines.length)];
-  const name = routine?.name || 'TreinoRR';
-
-  return {
-    title: copy.title,
-    body: line.replace('{0}', () => name),
-    tag: 'nudge'
-  };
+  const name = routine?.name || 'seu treino';
+  return { title: 'TreinoRR', body: `${copy.title} ${line.replace('{0}', () => name)}`, tag: 'nudge' };
 }
