@@ -6,7 +6,7 @@ const COPY = {
   en: {
     restTitle: 'Rest over 💪',
     restBody: 'Time for your next set.',
-    testBody: 'Test notification ✅ Notifications are working.',
+    testBody: 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.',
     dayFallbackTitle: 'Workout planned today',
     dayRoutineSuffix: 'today',
     dayBody: "It's on your plan. Let's go 💪",
@@ -31,7 +31,7 @@ export function restTimerPush(lang) {
 export function testPush(lang) {
   return {
     title: 'TreinoRR',
-    body: copyFor(lang).testBody,
+    body: 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.',
     tag: 'test'
   };
 }
