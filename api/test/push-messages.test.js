@@ -1,27 +1,51 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { dayReminderPush, restTimerPush, testPush } from '../push-messages.js';
+import { dayReminderPush, restTimerPush, testPush, nudgePush } from '../push-messages.js';
 
-test('localizes every server-generated notification in pt-BR', () => {
-  assert.deepEqual(restTimerPush('pt-BR'), {
-    title: 'Descanso terminado 💪',
-    body: 'Hora da próxima série.',
-    tag: 'rest-timer',
-  });
-  assert.deepEqual(testPush('pt-BR'), {
-    title: 'openGym',
-    body: 'Notificação de teste ✅ É assim que os alertas aparecem.',
-    tag: 'test',
-  });
-  assert.deepEqual(dayReminderPush('pt-BR', { name: 'Treino A', emoji: '💪' }), {
-    title: '💪 Treino A hoje',
-    body: 'Está no seu plano. Bora treinar 💪',
-    tag: 'day-reminder',
-  });
+const TEST_MESSAGE = 'Notificação de teste ✅ Tudo certo! Você receberá seus lembretes de treino por aqui.';
+
+test('envia notificação de teste em português com o nome TreinoRR', () => {
+  for (const lang of ['pt-BR', 'en', 'fr', undefined]) {
+    assert.deepEqual(testPush(lang), {
+      title: 'TreinoRR',
+      body: TEST_MESSAGE,
+      tag: 'test',
+    });
+  }
 });
 
-test('keeps the existing English copy as the fallback', () => {
-  assert.deepEqual(restTimerPush('fr'), restTimerPush('en'));
-  assert.equal(dayReminderPush('unknown', null).title, 'Workout planned today');
-  assert.equal(testPush(undefined).body, 'Test notification ✅ This is what alerts look like.');
+test('envia notificação de descanso em português com o nome TreinoRR', () => {
+  for (const lang of ['pt-BR', 'en', 'fr', undefined]) {
+    assert.deepEqual(restTimerPush(lang), {
+      title: 'TreinoRR',
+      body: 'Descanso finalizado 💪 Hora de começar sua próxima série.',
+      tag: 'rest-timer',
+    });
+  }
+});
+
+test('envia lembrete de treino em português com o nome TreinoRR', () => {
+  for (const lang of ['pt-BR', 'en', 'fr', undefined]) {
+    assert.deepEqual(dayReminderPush(lang, { name: 'Treino A', emoji: '💪' }), {
+      title: 'TreinoRR',
+      body: '💪 Treino A hoje — Seu treino está esperando por você. Bora treinar!',
+      tag: 'day-reminder',
+    });
+    assert.deepEqual(dayReminderPush(lang, null), {
+      title: 'TreinoRR',
+      body: 'Hora de treinar! 💪 — Seu treino está esperando por você. Bora treinar!',
+      tag: 'day-reminder',
+    });
+  }
+});
+
+test('envia incentivo em português com o nome TreinoRR', () => {
+  for (const lang of ['pt-BR', 'en', undefined]) {
+    const push = nudgePush(lang, 'friendly', { name: 'Treino A' }, '2026-10-22');
+    assert.equal(push.title, 'TreinoRR');
+    assert.equal(push.tag, 'nudge');
+    assert.equal(typeof push.body, 'string');
+    assert.ok(push.body.length > 0);
+    assert.deepEqual(push, nudgePush('pt-BR', 'friendly', { name: 'Treino A' }, '2026-10-22'));
+  }
 });
