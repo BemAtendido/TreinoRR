@@ -19,7 +19,9 @@ const { forcePrivilegeVerdict } = await import('../coach/adapters/spawn.js');
 cfg.save({ enabled: true, provider: 'fixture' });
 forcePrivilegeVerdict({ ok: true, dropped: false, why: 'pinned by the test suite' });
 
-const today = new Date(Date.now()).toISOString().slice(0, 10);
+// The test clock is pinned to 2026-09-05 by coach-test-clock.mjs.
+// Keep the expected day aligned with the test clock, not the runner's real date.
+const today = '2026-09-05';
 const userFile = uid => `${DIR}/coach/${uid}.json`;
 
 async function settle(uid, ms = 15000) {
