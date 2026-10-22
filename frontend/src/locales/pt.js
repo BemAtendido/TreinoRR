@@ -1172,7 +1172,6 @@ export default {
   'Coach plan': 'Plano do Coach',
   'Sessions': 'Sessões',
   'Min / session': 'Min / sessão',
-  'Volume ({0})': 'Volume ({0})',
   'Work sets': 'Séries efetivas',
   'goal': 'objetivo',
   'first → last session': 'primeira → última sessão',
