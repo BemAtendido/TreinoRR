@@ -203,7 +203,11 @@ function Shell() {
       <div id="app" className="vfade" key={loc.pathname}>
         <ErrorBoundary>
           {!authed ? <Login /> : needsMobileOnboarding ? <MobileOnboarding /> : (
-            <Routes>
+            <>
+              <header aria-label="TreinoRR" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px 16px 8px', minHeight: 48 }}>
+                <img src="/meu-treino-logo.png" alt="Romário Rocha — Meu Treino" style={{ display: 'block', width: 'auto', height: 32, maxWidth: 'min(70vw, 220px)', objectFit: 'contain' }} />
+              </header>
+              <Routes>
               <Route path="/home" element={<Home />} />
               {/* Gym check-in — switched off in Settings, the route falls through to the
                   catch-all redirect below. */}
@@ -229,7 +233,8 @@ function Shell() {
               <Route path="/coach/setup" element={<CoachSetup />} />
               <Route path="/admin" element={user?.admin ? <Admin /> : <Navigate to="/home" replace />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
-            </Routes>
+              </Routes>
+            </>
           )}
         </ErrorBoundary>
       </div>
