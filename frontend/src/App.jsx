@@ -204,8 +204,8 @@ function Shell() {
         <ErrorBoundary>
           {!authed ? <Login /> : needsMobileOnboarding ? <MobileOnboarding /> : (
             <>
-              <header aria-label="TreinoRR" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '14px 16px 10px', minHeight: 64 }}>
-                <img src="/meu-treino-logo.png" alt="Romário Rocha — Meu Treino" style={{ display: 'block', width: 'auto', height: 48, maxWidth: 'min(82vw, 300px)', objectFit: 'contain' }} />
+              <header aria-label="TreinoRR" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px 16px 10px', minHeight: 90 }}>
+                <img src="/meu-treino-logo.png" alt="Romário Rocha — Meu Treino" style={{ display: 'block', width: 'auto', height: 70, maxWidth: 'min(90vw, 390px)', objectFit: 'contain' }} />
               </header>
               <Routes>
               <Route path="/home" element={<Home />} />
