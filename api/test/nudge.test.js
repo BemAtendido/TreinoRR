@@ -82,31 +82,27 @@ test('a malformed state reads as nothing to nudge about', () => {
   assert.equal(toneOf({ tone: 'drill' }), 'drill');
 });
 
-test('push text: by tone, one line per date, routine name filled in, localized', () => {
+test('push text: titulo TreinoRR e conteudo sempre em portugues', () => {
   const iso = '2026-09-07';
-  const i = lineIndex(iso, 4);
+  const i = lineIndex(iso, NUDGE_COPY['pt-BR'].guilt.lines.length);
   const en = nudgePush('en', 'guilt', { name: 'Push Day' }, iso);
-  assert.equal(en.title, 'I miss you');
-  assert.equal(en.body, NUDGE_COPY.en.guilt.lines[i].replace('{0}', 'Push Day'));
+  assert.equal(en.title, 'TreinoRR');
+  assert.equal(en.body, NUDGE_COPY['pt-BR'].guilt.title + ' ' + NUDGE_COPY['pt-BR'].guilt.lines[i].replace('{0}', 'Push Day'));
   assert.equal(en.tag, 'nudge');
-  // the next day takes the next line
   assert.notEqual(nudgePush('en', 'guilt', { name: 'Push Day' }, '2026-09-08').body, en.body);
-  // every tone, every language: a title and the routine's name where the line has a slot
   for (const lang of Object.keys(NUDGE_COPY)) {
     for (const tone of ['friendly', 'guilt', 'drill']) {
       for (let d = 0; d < 4; d++) {
-        const p = nudgePush(lang, tone, { name: 'Ω' }, `2026-09-0${d + 1}`);
-        assert.ok(p.title && p.body && !p.body.includes('{0}'), `${lang}/${tone}`);
+        const isoDay = `2026-09-0${d + 1}`;
+        const p = nudgePush(lang, tone, { name: 'Ω' }, isoDay);
+        assert.equal(p.title, 'TreinoRR');
+        assert.ok(p.body && !p.body.includes('{0}'), `${lang}/${tone}`);
+        assert.deepEqual(p, nudgePush('pt-BR', tone, { name: 'Ω' }, isoDay));
       }
     }
   }
-  assert.equal(nudgePush('de', 'drill', null, iso).title, 'Achtung, Rekrut!');
-  assert.equal(nudgePush('pt-BR', 'friendly', null, iso).title, 'Está tudo bem?');
-  // unknown language and tone fall back to English and friendly; de-CH writes ss
-  assert.deepEqual(nudgePush('xx', 'mean', { name: 'A' }, iso), nudgePush('en', 'friendly', { name: 'A' }, iso));
-  for (const tone of ['friendly', 'guilt', 'drill']) {
-    for (let d = 0; d < 4; d++) assert.doesNotMatch(nudgePush('de-CH', tone, { name: 'A' }, `2026-09-0${d + 1}`).body, /ß/);
-  }
-  // a name with $-patterns is inserted literally
+  assert.equal(nudgePush('de', 'drill', null, iso).title, 'TreinoRR');
+  assert.equal(nudgePush('pt-BR', 'friendly', null, iso).title, 'TreinoRR');
+  assert.deepEqual(nudgePush('xx', 'mean', { name: 'A' }, iso), nudgePush('pt-BR', 'friendly', { name: 'A' }, iso));
   assert.match(nudgePush('en', 'friendly', { name: '$& $1' }, '2026-09-04').body + nudgePush('en', 'friendly', { name: '$& $1' }, '2026-09-05').body, /\$& \$1/);
 });
