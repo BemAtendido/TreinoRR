@@ -2618,10 +2618,10 @@ function ShareWorkoutImage({ w, nameOf, close }) {
     return () => { alive = false }
   }, [model, withMap, st.body])
   useEffect(() => () => { if (shown.current) URL.revokeObjectURL(shown.current) }, [])
-  const name = 'opengym-workout-' + (workoutDay(w) || todayISO()) + '.png'
+  const name = 'treinorr-treino-' + (workoutDay(w) || todayISO()) + '.png'
   const share = async () => {
     setBusy(true)
-    await shareImage(img.blob, name, w.name || 'openGym')
+    await shareImage(img.blob, name, w.name || 'TreinoRR')
     setBusy(false)
     close()
   }
@@ -2656,6 +2656,27 @@ async function workoutCardImage(model, { map, body }) {
   canvas.width = layout.width
   canvas.height = layout.height
   drawWorkoutCard(ctx, layout, colors, shape ? { body: shape, levels: model.levels } : null)
+  // Put the TreinoRR logo in the footer of the exported workout image.
+  // Loading is awaited so it is present in the PNG, not just in the preview.
+  try {
+    const logo = new Image()
+    logo.src = '/meu-treino-logo.png'
+    await logo.decode()
+    const maxW = 300
+    const maxH = 65
+    const scale = Math.min(maxW / logo.naturalWidth, maxH / logo.naturalHeight)
+    const w = logo.naturalWidth * scale
+    const h = logo.naturalHeight * scale
+    const x = layout.rtl ? layout.width - 80 - w : 80
+    const y = layout.height - 80 - h
+    ctx.drawImage(logo, x, y, w, h)
+  } catch {
+    // Preserve a readable brand if the logo file is unavailable.
+    ctx.fillStyle = colors.acc
+    ctx.font = `700 34px ${CARD_FONT}`
+    ctx.textAlign = layout.rtl ? 'right' : 'left'
+    ctx.fillText('TreinoRR', layout.rtl ? layout.width - 80 : 80, layout.height - 80)
+  }
   return new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
 }
 // The .fit file goes out the way a backup does: the share sheet in the phone app (Files, Drive,
